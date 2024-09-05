@@ -1,11 +1,11 @@
 package com.hashiong.universal_navigator.service;
 
-import com.hashiong.universal_navigator.model.WaitTime;
-import com.hashiong.universal_navigator.repository.WaitTimeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.hashiong.universal_navigator.model.Ride;
+import com.hashiong.universal_navigator.repository.RideRepository;
+import com.hashiong.universal_navigator.service.dto.RideDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.client.RestTemplateBuilder;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,30 +17,31 @@ public class QueueTimesService {
     private static final String QUEUE_TIMES_API_URL = "https://queue-times.com/api/v1/parks/{park_id}/wait_times";
 
     private final RestTemplate restTemplate;
-    private final WaitTimeRepository waitTimeRepository;
+    private final RideRepository rideRepository;
 
-    @Autowired
-    public QueueTimesService(RestTemplateBuilder restTemplateBuilder, WaitTimeRepository waitTimeRepository) {
+    public QueueTimesService(RestTemplateBuilder restTemplateBuilder, RideRepository rideRepository) {
         this.restTemplate = restTemplateBuilder.build();
-        this.waitTimeRepository = waitTimeRepository;
+        this.rideRepository = rideRepository;
     }
 
-    public void fetchAndStoreWaitTimes(String parkId) {
+    public void fetchAndStoreRides(String parkId) {
         String url = QUEUE_TIMES_API_URL.replace("{park_id}", parkId);
-        List<WaitTimeDTO> waitTimes = restTemplate.getForObject(url, List.class);
+        RideDTO[] rideDTOs = restTemplate.getForObject(url, RideDTO[].class);
 
-        List<WaitTime> waitTimeEntities = waitTimes.stream()
+        List<Ride> rides = List.of(rideDTOs).stream()
             .map(this::convertToEntity)
             .collect(Collectors.toList());
 
-        waitTimeRepository.saveAll(waitTimeEntities);
+        rideRepository.saveAll(rides);  // Save all rides to the database
     }
 
-    private WaitTime convertToEntity(WaitTimeDTO dto) {
-        WaitTime waitTime = new WaitTime();
-        waitTime.setRideId(dto.getRideId());
-        waitTime.setWaitTime(dto.getWaitTime());
-        waitTime.setTimestamp(LocalDateTime.now());
-        return waitTime;
+    private Ride convertToEntity(RideDTO dto) {
+        Ride ride = new Ride();
+        ride.setId(dto.getId());
+        ride.setName(dto.getName());
+        ride.setIs_open(dto.isIs_open());
+        ride.setWait_time(dto.getWait_time());
+        ride.setLast_updated(dto.getLast_updated());
+        return ride;
     }
 }

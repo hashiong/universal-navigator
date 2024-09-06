@@ -1,69 +1,69 @@
 package com.hashiong.universal_navigator.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "rides")  // Specifies the table name in the database
+@Table(name = "ride")
 public class Ride {
 
     @Id
-    private Long id;  // Maps to the 'id' field in your API
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ride_id")
+    private Integer id;
 
-    @Column(name = "name", nullable = false)  // Ride name must not be null
-    private String name;
+    @Column(name = "ride_name", nullable = false)
+    private String rideName;
 
-    @Column(name = "is_open")  // Indicates if the ride is currently open
-    private boolean is_open;
+    // Cache for the latest status info
+    @Column(name = "last_wait_time")
+    private Integer lastWaitTime;
 
-    @Column(name = "wait_time")  // Current wait time for the ride
-    private int wait_time;
+    @Column(name = "last_is_open")
+    private Boolean lastIsOpen;
 
-    @Column(name = "last_updated")  // The timestamp of the last update
-    private LocalDateTime last_updated;
+    @Column(name = "last_status_update")
+    private LocalDateTime lastStatusUpdate;
 
-    // Getters and setters
-
-    public Long getId() {
+    // Getters and Setters
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getRideName() {
+        return rideName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRideName(String rideName) {
+        this.rideName = rideName;
     }
 
-    public boolean isIs_open() {
-        return is_open;
+    public Integer getLastWaitTime() {
+        return lastWaitTime;
     }
 
-    public void setIs_open(boolean is_open) {
-        this.is_open = is_open;
+    public void setLastWaitTime(Integer lastWaitTime) {
+        this.lastWaitTime = lastWaitTime;
     }
 
-    public int getWait_time() {
-        return wait_time;
+    public Boolean getLastIsOpen() {
+        return lastIsOpen;
     }
 
-    public void setWait_time(int wait_time) {
-        this.wait_time = wait_time;
+    public void setLastIsOpen(Boolean lastIsOpen) {
+        this.lastIsOpen = lastIsOpen;
     }
 
-    public LocalDateTime getLast_updated() {
-        return last_updated;
+    public LocalDateTime getLastStatusUpdate() {
+        return lastStatusUpdate;
     }
 
-    public void setLast_updated(LocalDateTime last_updated) {
-        this.last_updated = last_updated;
+    public void setLastStatusUpdate(LocalDateTime lastStatusUpdate) {
+        this.lastStatusUpdate = lastStatusUpdate;
     }
 }

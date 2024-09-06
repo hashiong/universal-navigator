@@ -1,20 +1,26 @@
 package com.hashiong.universal_navigator.service.dto;
 
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RideDTO {
-    private Long id;
+    private Integer id; // ride_id in the entity
     private String name;
-    private boolean is_open;
-    private int wait_time;
-    private LocalDateTime last_updated;
+    
+    @JsonProperty("is_open") // This ensures proper mapping from the JSON field
+    private Boolean isOpen;
+    
+    @JsonProperty("wait_time") // Ensures mapping for wait time
+    private Integer waitTime;
+    
+    @JsonProperty("last_updated") // Mapping for the last updated field
+    private String lastUpdated;
 
-    // Getters and setters
-    public Long getId() {
+    // Getters and Setters
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -26,27 +32,27 @@ public class RideDTO {
         this.name = name;
     }
 
-    public boolean isIs_open() {
-        return is_open;
+    public Boolean getIsOpen() {
+        return isOpen;
     }
 
-    public void setIs_open(boolean is_open) {
-        this.is_open = is_open;
+    public void setIsOpen(Boolean isOpen) {
+        this.isOpen = isOpen;
     }
 
-    public int getWait_time() {
-        return wait_time;
+    public Integer getWaitTime() {
+        return waitTime;
     }
 
-    public void setWait_time(int wait_time) {
-        this.wait_time = wait_time;
+    public void setWaitTime(Integer waitTime) {
+        this.waitTime = waitTime;
     }
 
-    public LocalDateTime getLast_updated() {
-        return last_updated;
+    public String getLastUpdated() {
+        return lastUpdated;
     }
 
-    public void setLast_updated(LocalDateTime last_updated) {
-        this.last_updated = last_updated;
+    public void setLastUpdated(String lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 }

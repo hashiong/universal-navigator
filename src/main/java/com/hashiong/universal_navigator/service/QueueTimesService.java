@@ -36,7 +36,6 @@ public class QueueTimesService {
         this.rideStatusRepository = rideStatusRepository;
     }
 
-    @Transactional
     public void fetchAndStoreRides(String parkId) {
         logger.info("Fetching ride data for park ID: {}", parkId);
         String url = QUEUE_TIMES_API_URL.replace("{park_id}", parkId);
@@ -50,25 +49,29 @@ public class QueueTimesService {
         logger.info("Finished fetching and storing rides for park ID: {}", parkId);
     }
 
-    // Store or update the Ride and its statuses
     private void storeOrUpdateRideAndStatus(RideDTO rideDTO) {
         logger.info("Processing ride: {}", rideDTO.getName());
-
+        
         // Check if the ride exists in the database
         Optional<Ride> existingRide = rideRepository.findById(rideDTO.getId());
+        logger.info("Exisiting Ride : {}", existingRide);
         Ride ride;
-
+    
         if (existingRide.isPresent()) {
             ride = existingRide.get();
+            logger.info("Found existing ride with ID: {}", ride.getId());
         } else {
             ride = new Ride();
+            logger.info("Get ride id: {}", rideDTO.getId());
             ride.setId(rideDTO.getId());
             ride.setRideName(rideDTO.getName());
+            logger.info("Creating new ride: {}", rideDTO.getName());
         }
-
-        String lastUpdated_str = rideDTO.getLastUpdated();
-        LocalDateTime lastUpdated = convertToLocalDateTime(lastUpdated_str);
-
+    
+        LocalDateTime lastUpdated = rideDTO.getLastUpdated();
+    
+        logger.info("Ride '{}' lastStatusUpdate: '{}', new update time: '{}'", ride.getRideName(), ride.getLastStatusUpdate(), lastUpdated);
+    
         // Check if the last status update is the same as the current one
         if (ride.getLastStatusUpdate() == null || !ride.getLastStatusUpdate().equals(lastUpdated)) {
             // Update Ride with the latest status
@@ -76,7 +79,8 @@ public class QueueTimesService {
             ride.setLastIsOpen(rideDTO.getIsOpen());
             ride.setLastStatusUpdate(lastUpdated);
             rideRepository.save(ride);  // Save the updated ride information
-
+            logger.info("Updated lastStatusUpdate for ride: {}", ride.getRideName());
+    
             // Also, store a new status record in RideStatus
             RideStatus rideStatus = new RideStatus();
             rideStatus.setRideId(ride.getId());
@@ -84,16 +88,8 @@ public class QueueTimesService {
             rideStatus.setWaitTime(rideDTO.getWaitTime());
             rideStatus.setLastUpdated(lastUpdated);
             rideStatusRepository.save(rideStatus);
+        } else {
+            logger.info("No update needed for ride '{}'. The last update time is the same.", ride.getRideName());
         }
-    }
-
-    private LocalDateTime convertToLocalDateTime(String dateTimeString) {
-        if (dateTimeString == null || dateTimeString.isEmpty()) {
-            throw new IllegalArgumentException("DateTime string cannot be null or empty");
-        }
-
-        // Parse the timestamp with OffsetDateTime and convert to LocalDateTime
-        OffsetDateTime offsetDateTime = OffsetDateTime.parse(dateTimeString);
-        return offsetDateTime.toLocalDateTime();
     }
 }

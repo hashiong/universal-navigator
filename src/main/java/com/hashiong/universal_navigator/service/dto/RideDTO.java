@@ -1,6 +1,7 @@
 package com.hashiong.universal_navigator.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDateTime;
 
 public class RideDTO {
     private Integer id; // ride_id in the entity
@@ -13,7 +14,7 @@ public class RideDTO {
     private Integer waitTime;
     
     @JsonProperty("last_updated") // Mapping for the last updated field
-    private String lastUpdated;
+    private LocalDateTime lastUpdated;
 
     // Getters and Setters
     public Integer getId() {
@@ -48,11 +49,11 @@ public class RideDTO {
         this.waitTime = waitTime;
     }
 
-    public String getLastUpdated() {
+    public LocalDateTime getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(String lastUpdated) {
+    public void setLastUpdated(LocalDateTime lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 }

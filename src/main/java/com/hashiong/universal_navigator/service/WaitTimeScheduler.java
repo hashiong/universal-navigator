@@ -10,8 +10,9 @@ public class WaitTimeScheduler {
     @Autowired
     private QueueTimesService queueTimesService;
 
-    @Scheduled(fixedRate = 600000) // Fetch every 10 minutes
+    @Scheduled(fixedRate = 120000) // Fetch every 2 min
     public void scheduleFetchAndStoreWaitTimes() {
+        
         queueTimesService.fetchAndStoreRides("66");
     }
 }

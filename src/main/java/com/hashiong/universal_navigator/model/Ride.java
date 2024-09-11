@@ -21,6 +21,7 @@ public class Ride {
 
     @Column(name = "last_is_open")
     private Boolean lastIsOpen;
+    
 
     @Column(name = "last_status_update")
     private LocalDateTime lastStatusUpdate;

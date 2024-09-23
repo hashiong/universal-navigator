@@ -62,8 +62,6 @@ public class QueueTimesService {
         });
 
         LocalDateTime lastUpdated = rideDTO.getLastUpdated();
-        logger.info("Last Update time: {}", lastUpdated);
-        logger.info("Last Update time in DB: {}", ride.getLastStatusUpdate());
 
         // Check if the ride status needs to be updated
         if (ride.getLastStatusUpdate() == null || !ride.getLastStatusUpdate().equals(lastUpdated)) {

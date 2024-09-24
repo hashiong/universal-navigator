@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/rides")
+@CrossOrigin(origins = "http://localhost:3000") // Allow requests from localhost:3000
 public class RideController {
 
     private final QueueTimesService queueTimesService;

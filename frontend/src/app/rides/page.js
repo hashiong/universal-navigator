@@ -1,4 +1,3 @@
-
 "use client";  // This ensures it's a Client Component
 
 import { useEffect, useState } from 'react';

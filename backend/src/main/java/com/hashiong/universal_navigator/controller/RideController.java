@@ -38,6 +38,7 @@ public class RideController {
 
     @PostMapping("/optimal-route")
     public ResponseEntity<?> getOptimalRoute(@RequestBody RouteRequestDTO routeRequest) {
+        System.out.println("route request: " + routeRequest.getRideIds());
         // Validate input
         if (routeRequest.getRideIds() == null || routeRequest.getRideIds().isEmpty()) {
             return ResponseEntity.badRequest().body("Ride IDs cannot be null or empty.");
